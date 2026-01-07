@@ -1,9 +1,13 @@
-FROM amazon/aws-lambda-python:3.8
-LABEL authors="ChasisTorcido"
+FROM python:3.11-slim
 
-COPY requirements.txt ./
+# تثبيت ffmpeg وهو ضروري لمعالجة الفيديوهات
+RUN apt-get update && apt-get install -y ffmpeg && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY src ./src
+COPY . .
 
-CMD ["src/bot.handler"]
+CMD ["python", "bot.py"]
